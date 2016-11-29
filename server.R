@@ -1,5 +1,7 @@
 library(dplyr)
 library(shiny)
+library(rsconnect)
+library(plotly)
 
 #Import Runescape data from split files and turn to tables
 files <- list.files(path = "data/", full.names = TRUE)
