@@ -42,7 +42,15 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     tabPanel("Page 2",
     
     sidebarLayout(
-      sidebarPanel("Sidebar panel"),
+      sidebarPanel(
+        sliderInput("date_range", 
+                    "Choose Date Range:", 
+                    min = as.Date("2016-02-01"), max = Sys.Date(), 
+                    value = c(as.Date("2016-02-25"), Sys.Date())
+        )
+        
+        
+      ),
       mainPanel("Main panel")
     )
     
