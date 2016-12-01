@@ -3,6 +3,8 @@ library(dplyr)
 library(plotly)
 library(rsconnect)
 
+source('server.R')
+
 shinyUI(fluidPage(theme = "bootstrap.css",
   navbarPage("The Grand Exchange!",
     tabPanel("Overview",
@@ -43,6 +45,12 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     
     sidebarLayout(
       sidebarPanel(
+        
+        selectInput("category", "Category:", unique, selected = unique[1], multiple = FALSE),
+        
+        #selectInput("item", "Item:", selected.category$ItemName, selected = selected.category$ItemName[1], multiple = FALSE),
+        
+
         sliderInput("date_range", 
                     "Choose Date Range:", 
                     min = as.Date("2016-02-01"), max = Sys.Date(), 
