@@ -46,7 +46,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     sidebarLayout(
       sidebarPanel(
         
-        selectInput("category", "Category:", unique, selected = unique[1], multiple = FALSE),
+        #selectInput("category", "Category:", unique, selected = unique[1], multiple = FALSE),
         
         #selectInput("item", "Item:", selected.category$ItemName, selected = selected.category$ItemName[1], multiple = FALSE),
         
