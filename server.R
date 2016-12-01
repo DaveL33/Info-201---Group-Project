@@ -2,7 +2,6 @@ library(dplyr)
 library(shiny)
 library(rsconnect)
 library(plotly)
-library(ggplot2)
 
 #setwd for Jake only 
 #setwd("~/University of Washington/2016-17/Autumn Quarter/INFO 201/Info-201---Group-Project")
@@ -27,10 +26,30 @@ initData <- function() {
 }
 
 #Initialize data
-runescape.data <- initData()
+#runescape.data <- initData()
 
-unique <- sort(as.vector(unique(runescape.data$Category)))
+unique.category <- sort(as.vector(unique(runescape.data$Category)))
 
 shinyServer(function(input, output) {
-    selected.category <- runescape.data %>% filter(Category == xzczxc)
+  #
+  selected.category <- runescape.data
+  selected.item <- runescape.data 
+  
+  output$itemSelect <- renderUI({ 
+    #
+    selected.category <- selected.category %>% filter(Category == input$category)
+    
+    #
+    unique.item <- sort(as.vector(unique(selected.category$ItemName)))
+    
+    #
+    selectInput("item", "Item:", unique.item, selected = unique.item[1], multiple = FALSE)
+    
+    #
+    selected.item <- selected.category %>% filter(ItemName == input$item)
+  })
+  
+  output$simplePrice <- renderPlotly({
+    
+  })
 })

@@ -41,15 +41,14 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     ),
     
     
-    tabPanel("Page 2",
+    tabPanel("Simple Item Price Chart",
     
     sidebarLayout(
       sidebarPanel(
         
-        #selectInput("category", "Category:", unique, selected = unique[1], multiple = FALSE),
+        selectInput("category", "Category:", unique.category, selected = unique.category[1], multiple = FALSE),
         
-        #selectInput("item", "Item:", selected.category$ItemName, selected = selected.category$ItemName[1], multiple = FALSE),
-        
+        uiOutput("itemSelect"),
 
         sliderInput("date_range", 
                     "Choose Date Range:", 
@@ -57,13 +56,14 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                     value = c(as.Date("2016-02-25"), Sys.Date())
         )
         
-        
       ),
-      mainPanel("Main panel")
+      mainPanel("Main panel",
+        plotlyOutput("simplePrice")
+      )
     )
     
     ),
-    tabPanel("Page 3"
+    tabPanel("Predictive Price Chart"
              
     )
     
