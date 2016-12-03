@@ -3,9 +3,6 @@ library(shiny)
 library(rsconnect)
 library(plotly)
 
-#setwd for Jake only 
-#setwd("~/University of Washington/2016-17/Autumn Quarter/INFO 201/Info-201---Group-Project")
-
 #Function that sets up runescape data from csv files
 initData <- function() {
   
@@ -27,7 +24,7 @@ initData <- function() {
 }
 
 #Initialize data
-#runescape.data <- initData()
+runescape.data <- initData()
 
 #Vector containing unique categories of items
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
