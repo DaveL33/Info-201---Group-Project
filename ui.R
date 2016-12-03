@@ -50,15 +50,11 @@ shinyUI(fluidPage(theme = "bootstrap.css",
         
         uiOutput("itemSelect"),
 
-        sliderInput("date_range", 
-                    "Choose Date Range:", 
-                    min = as.Date("2016-02-01"), max = Sys.Date(), 
-                    value = c(as.Date("2016-02-25"), Sys.Date())
-        )
+        uiOutput("dateSelect")
         
       ),
-      mainPanel("Main panel",
-        plotlyOutput("simplePrice")
+      mainPanel("Main panel"
+                
       )
     )
     
