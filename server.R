@@ -14,10 +14,10 @@ initData <- function() {
   runescape.data <- do.call(rbind, tables)
   
   #Fix PriceDate to make it readable and neat
-  runescape.data <- runescape.data %>% mutate(PriceDate = as.POSIXct(as.numeric(as.character({runescape.data$PriceDate})), origin='1970-01-01', tz='GMT'))
+  runescape.data <- runescape.data %>% mutate(PriceDate = as.Date(as.POSIXct(as.POSIXct(runescape.data$PriceDate, origin="1970-01-01"), origin="1970-01-01")))
   
   #Fix DateAdded to make it readable and neat
-  runescape.data <- runescape.data %>% mutate(DateAdded = as.POSIXct(as.numeric(as.character({runescape.data$DateAdded})), origin='1970-01-01', tz='GMT'))
+  runescape.data <- runescape.data %>% mutate(DateAdded = as.Date(as.POSIXct(as.POSIXct(runescape.data$DateAdded, origin="1970-01-01"), origin="1970-01-01")))
   
   #return data for scope
   return (runescape.data)
@@ -52,9 +52,12 @@ shinyServer(function(input, output) {
     selected.item <- selected.category %>% filter(ItemName == input$item)
     min.date <- min(selected.item$PriceDate, na.rm = TRUE)
     max.date <- max(selected.item$PriceDate, na.rm = TRUE)
+    
     sliderInput("date_range", 
                 "Choose Date Range:", 
-                min = min.date, max = max.date, timeFormat = "%F %T", value = c(min.date, max.date)
+                min = min.date, max = max.date, 
+                timeFormat = "%F", 
+                value = c(min.date, max.date)
     )
   })
 })
