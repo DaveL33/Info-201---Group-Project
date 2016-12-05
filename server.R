@@ -27,7 +27,7 @@ initData <- function() {
 }
 
 #Initialize data
-runescape.data <- initData()
+#runescape.data <- initData()
 
 #Vector containing unique categories of items
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
