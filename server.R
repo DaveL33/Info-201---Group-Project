@@ -13,10 +13,14 @@ initData <- function() {
   
   #Merge 8 data files into one data frame
   runescape.data <- do.call(rbind, tables)
+  
+  #Delete some columns for efficiency
   runescape.data$X.1 <- NULL
   runescape.data$X <- NULL
+  runescape.data$DateAdded <- NULL
+  
   #Fix PriceDate to make it readable and neat
-  runescape.data <- runescape.data %>% mutate(PriceDate = as.Date(as.POSIXct(as.POSIXct(runescape.data$PriceDate, origin="1970-01-01"), origin="1970-01-01")))
+  runescape.data <- runescape.data %>% mutate(PriceDate = as.Date(as.POSIXct(as.POSIXct(runescape.data$PriceDate, origin = "1970-01-01"), origin = "1970-01-01")))
   
   #return data for scope
   return (runescape.data)
@@ -30,16 +34,17 @@ unique.category <- sort(as.vector(unique(runescape.data$Category)))
 
 shinyServer(function(input, output) {
   
-  #
+  #Set category dataframe to be later modified and scoped
   selected.category <- runescape.data
   
-  #
+  #Set item dataframe to be later modified and scoped
   selected.item <- runescape.data 
   
+  #Render itemSelect ui
   output$itemSelect <- renderUI({ 
     
     #dataframe with filtered category is the category the user selected
-    selected.category <-  filter(runescape.data, Category == input$category)
+    selected.category <- filter(runescape.data, Category == input$category)
     
     #Vector containing unique items for selected category 
     unique.item <- sort(as.vector(unique(selected.category$ItemName)))
@@ -48,7 +53,10 @@ shinyServer(function(input, output) {
     selectInput("item", "Item:", unique.item, selected = unique.item[1], multiple = FALSE)
   })
   
+  #Render dateSelect ui
   output$dateSelect <- renderUI({
+    
+    #set up selected.item dataframe and get min and max values
     selected.item <- selected.category %>% filter(ItemName == input$item)
     min.date <- min(selected.item$PriceDate, na.rm = TRUE)
     max.date <- max(selected.item$PriceDate, na.rm = TRUE)
@@ -61,29 +69,28 @@ shinyServer(function(input, output) {
     )
   })
   
+  #Render plot
   output$graphic <- renderPlotly({
+    
     #Dates, min and max, taken from the above input slider.
-    minDate <- min(input$dateSelect)
-    maxDate <- max(input$dateSelect)
+    min.date <- min(input$dateSelect)
+    max.date <- max(input$dateSelect)
     
-    runescape.data <- filter(runescape.data, ItemName == input$item, PriceDate > minDate & PriceDate < maxDate) %>% 
-                      group_by(PriceDate) %>% 
-                      summarize(Gold = mean(Price))
+    plot.data <- runescape.data %>% filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
     
-    gold.plot <- plot_ly(runescape.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines') %>% 
+    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines') %>% 
       layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
              paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
-    
-    return(gold.plot)
   })
   
+  #Render table under date slider
   output$ItemInfo <- renderTable({
-    runescape.data <- filter(runescape.data, ItemName == input$item)
+    tabel.data <- runescape.data %>% filter(ItemName == input$item)
     Info <- c('Members Only', 'Low Alch', 'High Alch')
-    Data <- c(runescape.data$MembersOnly[[1]], runescape.data$LowAlch[[1]], 
-                runescape.data$HighAlch[[1]])
-    item.info <- data.frame(Info, Data)
+    Data <- c(tabel.data$MembersOnly[[1]], tabel.data$LowAlch[[1]], 
+              tabel.data$HighAlch[[1]])
     
-    return(item.info)
+    #Display Both columns
+    return(data.frame(Info, Data))
   })
 })

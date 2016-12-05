@@ -4,7 +4,7 @@ library(plotly)
 library(rsconnect)
 library(shinythemes)
 
-#source('server.R')
+source('server.R')
 
 shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Gothic';
                                                         font-size: 9pt;
@@ -59,6 +59,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         uiOutput("dateSelect"),
         
         h5("Item Information:"),
+        
         tableOutput('ItemInfo')
         
       ),
