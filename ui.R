@@ -101,7 +101,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     ),
     
     #GDP Chart Tab
-    tabPanel("Runescape Gross Domestic Product",
+    tabPanel("Runescape Economy Statistics",
     sidebarLayout(
       
       #GDP Sidebar/Controls
