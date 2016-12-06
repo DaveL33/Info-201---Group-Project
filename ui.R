@@ -66,6 +66,8 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         
         h5("Item Information:"),
         
+        htmlOutput('ItemImage'),
+        
         tableOutput('ItemInfo')
         
       ),

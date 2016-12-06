@@ -3,7 +3,7 @@ library(shiny)
 library(rsconnect)
 library(plotly)
 library(jsonlite)
-
+library(purrr)
 
 #Function that sets up runescape data from csv files
 initData <- function() {
@@ -27,11 +27,31 @@ initData <- function() {
   return (runescape.data)
 }
 
-#Initialize data
+# Runescape likes to frequently change the item codes that are used for making
+# API calls so this gets the most recent item codes from a 3rd party API
+initItemCodesData <- function() {
+  l <- RJSONIO::fromJSON('http://mooshe.pw/files/items_rs3.json')
+  
+  item.codes <- l %>% transpose() %>% map_df(simplify)
+  
+  item.codes$id <- names(l)
+  
+  item.codes.tradeable <- item.codes %>% filter(item.codes$tradeable == "TRUE")
+  
+  item.codes <- select(item.codes.tradeable, name, id)
+  
+  return (item.codes)
+}
+
+#Initialize Grand Exchange data from 'data' folder
 #runescape.data <- initData()
 
+#Initialize 3rd party item code data
+item.codes <- initItemCodesData()
+
 #Load item ID data frame for making API calls
-item.codes <- read.csv('data/item_codes.csv')
+#item.codes <- read.csv('data/item_codes.csv')
+
 
 #Vector containing unique categories of items
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
@@ -87,18 +107,29 @@ shinyServer(function(input, output) {
              paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
   })
   
+  #Renders the image of the item that the user is searching for information about. Gets
+  #the image URL from the Runescape API
+  output$ItemImage = renderUI({
+    # In case there is more than one item with the same item ID, get the first one
+    # (the Runescape API says this is the best practice)
+     item.id <- head(item.codes %>% filter(name == input$item), 1)
+     image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
+     tags$img(src = image.url)
+   })
+  
   #Render table under date slider
   output$ItemInfo <- renderTable({
     
     base <- "http://services.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item="
-    item.id <- item.codes %>% filter(name == input$item)
+    # In case there is more than one item with the same item ID, get the first one
+    # (the Runescape API says this is the best practice)
+    item.id <- head(item.codes %>% filter(name == input$item), 1)
     url <- paste0(base, item.id$id)
     item.data <- fromJSON(url)
     
     table.data <- runescape.data %>% filter(ItemName == input$item)
-    image.url <- item.data[[1]]$icon_large[1]
-    Info <- c('Description', 'Image', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
-    Data <- c(item.data[[1]]$description[[1]], paste0('<img src="', image.url, '"></img>'), item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
+    Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
+    Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
               table.data$HighAlch[[1]])
     
     #Display Both columns
