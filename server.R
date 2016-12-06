@@ -25,14 +25,20 @@ initData <- function() {
 # Runescape likes to frequently change the item codes that are used for making
 # API calls so this gets the most recent item codes from a 3rd party API
 initItemCodesData <- function() {
+  
+  # Loads Runescape item data from API into a list (API has odd formatting)
   l <- RJSONIO::fromJSON('http://mooshe.pw/files/items_rs3.json')
   
+  # Converts the list of API data into a data frame
   item.codes <- l %>% transpose() %>% map_df(simplify)
   
+  # Add the item IDs as a column to the item.codes data frame
   item.codes$id <- names(l)
   
+  # Gets rid of the unnecessary columns from the API for efficiency
   item.codes <- select(item.codes, name, id)
   
+  # Returns the dataframe of Runescape item codes
   return (item.codes)
 }
 
@@ -74,6 +80,7 @@ shinyServer(function(input, output) {
     min.date <- min(selected.item$PriceDate, na.rm = TRUE)
     max.date <- max(selected.item$PriceDate, na.rm = TRUE)
     
+    #load slider input with dates
     sliderInput("dateSelect", 
                 "Choose Date Range:", 
                 min = min.date, max = max.date, 
@@ -90,18 +97,21 @@ shinyServer(function(input, output) {
     
     plot.data <- runescape.data %>% filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
     
-    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines') %>% 
-      layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
-             paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
+    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines') %>% layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
   })
   
   #Renders the image of the item that the user is searching for information about. Gets
   #the image URL from the Runescape API
   output$ItemImage = renderUI({
+    
     # In case there is more than one item with the same item ID, get the first one
     # (the Runescape API says this is the best practice)
     item.id <- head(item.codes %>% filter(name == input$item), 1)
+    
+    # Get the image URL for the item icon based on its item id
     image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
+    
+    # Set the item icon as an image to be displayed in the app UI
     tags$img(src = image.url)
   })
   
@@ -126,4 +136,5 @@ shinyServer(function(input, output) {
       print("Could not get data")
     }
   })
+  
 })
