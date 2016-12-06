@@ -36,9 +36,9 @@ initItemCodesData <- function() {
   
   item.codes$id <- names(l)
   
-  item.codes.tradeable <- item.codes %>% filter(item.codes$tradeable == "TRUE")
+  #item.codes.tradeable <- item.codes %>% filter(item.codes$tradeable == "TRUE")
   
-  item.codes <- select(item.codes.tradeable, name, id)
+  item.codes <- select(item.codes, name, id)
   
   return (item.codes)
 }
@@ -119,7 +119,6 @@ shinyServer(function(input, output) {
   
   #Render table under date slider
   output$ItemInfo <- renderTable({
-    
     base <- "http://services.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item="
     # In case there is more than one item with the same item ID, get the first one
     # (the Runescape API says this is the best practice)
@@ -127,12 +126,16 @@ shinyServer(function(input, output) {
     url <- paste0(base, item.id$id)
     item.data <- fromJSON(url)
     
-    table.data <- runescape.data %>% filter(ItemName == input$item)
-    Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
-    Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
-              table.data$HighAlch[[1]])
-    
-    #Display Both columns
-    return(data.frame(Info, Data))
+    if(!is.null(item.data)){
+      table.data <- runescape.data %>% filter(ItemName == input$item)
+      Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
+      Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
+                table.data$HighAlch[[1]])
+      
+      #Display Both columns
+      return(data.frame(Info, Data))
+    } else {
+      print("Could not get data")
+    }
   })
 })
