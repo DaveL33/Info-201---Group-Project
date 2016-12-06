@@ -2,13 +2,14 @@ library(dplyr)
 library(shiny)
 library(rsconnect)
 library(plotly)
+library(jsonlite)
 
 
 #Function that sets up runescape data from csv files
 initData <- function() {
 
   #Import Runescape data from split files and turn to tables
-  files <- list.files(path = "data/", full.names = TRUE)
+  files <- list.files(path = "data/", pattern = "Runescape_Market_Data", full.names = TRUE)
   tables <- lapply(files, read.csv, stringsAsFactors = FALSE)
   
   #Merge 8 data files into one data frame
@@ -28,6 +29,9 @@ initData <- function() {
 
 #Initialize data
 #runescape.data <- initData()
+
+#Load item ID data frame for making API calls
+item.codes <- read.csv('data/item_codes.csv')
 
 #Vector containing unique categories of items
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
@@ -85,10 +89,17 @@ shinyServer(function(input, output) {
   
   #Render table under date slider
   output$ItemInfo <- renderTable({
-    tabel.data <- runescape.data %>% filter(ItemName == input$item)
-    Info <- c('Members Only', 'Low Alch', 'High Alch')
-    Data <- c(tabel.data$MembersOnly[[1]], tabel.data$LowAlch[[1]], 
-              tabel.data$HighAlch[[1]])
+    
+    base <- "http://services.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item="
+    item.id <- item.codes %>% filter(name == input$item)
+    url <- paste0(base, item.id$id)
+    item.data <- fromJSON(url)
+    
+    table.data <- runescape.data %>% filter(ItemName == input$item)
+    image.url <- item.data[[1]]$icon_large[1]
+    Info <- c('Description', 'Image', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
+    Data <- c(item.data[[1]]$description[[1]], paste0('<img src="', image.url, '"></img>'), item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
+              table.data$HighAlch[[1]])
     
     #Display Both columns
     return(data.frame(Info, Data))
