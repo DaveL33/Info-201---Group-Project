@@ -15,11 +15,6 @@ initData <- function() {
   #Merge 8 data files into one data frame
   runescape.data <- do.call(rbind, tables)
   
-  #Delete some columns for efficiency
-  runescape.data$X.1 <- NULL
-  runescape.data$X <- NULL
-  runescape.data$DateAdded <- NULL
-  
   #Fix PriceDate to make it readable and neat
   runescape.data <- runescape.data %>% mutate(PriceDate = as.Date(as.POSIXct(as.POSIXct(runescape.data$PriceDate, origin = "1970-01-01"), origin = "1970-01-01")))
   
@@ -36,22 +31,16 @@ initItemCodesData <- function() {
   
   item.codes$id <- names(l)
   
-  #item.codes.tradeable <- item.codes %>% filter(item.codes$tradeable == "TRUE")
-  
   item.codes <- select(item.codes, name, id)
   
   return (item.codes)
 }
 
 #Initialize Grand Exchange data from 'data' folder
-#runescape.data <- initData()
+runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
-
-#Load item ID data frame for making API calls
-#item.codes <- read.csv('data/item_codes.csv')
-
 
 #Vector containing unique categories of items
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
