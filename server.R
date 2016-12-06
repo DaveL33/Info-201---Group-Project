@@ -77,7 +77,6 @@ shinyServer(function(input, output) {
     sliderInput("dateSelect", 
                 "Choose Date Range:", 
                 min = min.date, max = max.date, 
-                timeFormat = "%F", 
                 value = c(min.date, max.date)
     )
   })
