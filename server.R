@@ -4,6 +4,7 @@ library(rsconnect)
 library(plotly)
 library(jsonlite)
 library(purrr)
+library(httr)
 
 #Function that sets up runescape data from csv files
 initData <- function() {
@@ -114,7 +115,13 @@ shinyServer(function(input, output) {
     image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
     
     # Set the item icon as an image to be displayed in the app UI
-    tags$img(src = image.url, alt = 'Image not available')
+    #Check if URL is valid
+    if (url_ok(image.url)) {
+      img(src = image.url)
+    } else {
+      p("Image not available")
+    }
+    
   })
   
   #Render table under date slider
