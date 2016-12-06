@@ -26,18 +26,26 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     # Header
     titlePanel(img(src='RunescapeLogo.png', width = '300px', height = '100px')),
     
-    # Sidebar if necessary
+    
     sidebarLayout(
+      
+      # Group Members
       sidebarPanel(
         h3("Group members:"),
         p("Juan Alvarez, Kyle Evans, Jake George, David Lee")
         ),
+      
+      # Overview
       mainPanel(
         tabsetPanel(
+          
+          #Introduction to our project
           tabPanel("Introduction",
           h1("Introduction"),
           p("Runescape is a free to play MMORPG (massively multiplayer online role playing game) that contains its own economy. In the game, players buy and sell virtual items for virtual gold coins through an in-game system called the Grand Exchange. Like a real economy, the price of a given item fluctuates with time and is dependent on a variety of ingame variables. The dataset we will be working with contains approximately three years worth of data that describes the price of all in-game items that are available to players. We got this dataset initially from Reddit, which was under a Github repository. Since Runescape has a low-level API, the user had to scrape the data from a website that had all of the prices for different items over the past years. This took approximately 20 hours using a scraping applications named BeautifulSoup and Requests. Our target audience would be Runescape users who want to get more information on their items, in order to get an edge while playing the game. The users are able to get a plethora of information from the scraped file. Given this 300MB csv file, the users are now able to ask: \"What would the price of a certain item be in the next month?\", \"How did the price change relative to the past three years?\", \"What items fluctuates more or less relative to other items?\", and \"Are there certain economic trends that can be used to predict the price in the distant future?\""),
           br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(), br(), br(), br(), br()),
+          
+          #Technical Description of our project
           tabPanel("Technical Description",
           h1("Technical Description"),
           p("Our final product will be in the form of a Shiny app that allows users to enter the name of a specific in-game item and returns information about the history of that item in the Grand Exchange. We will be reading in a .csv file that contains the known history for all in-game items in Runescape, and what their prices were in the Grand Exchange for a given date, over about three years. We will also be leveraging the Runescape API which will allow us to obtain real time game information, such as the current price of an item in the Grand Exchange. Combining this .csv file and the game's API, we will be able to make comparisons as to how the current price of an item compares to previous prices, and make predictions on the future price of an item. Runescape players would find this information very valuable as it would give them strong insight into making lots of gold coins in the Runescape economy."),
@@ -53,25 +61,35 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     )
     ),
     
-    
+    #Standard Price Chart for a single item
     tabPanel("Simple Item Price Chart",
     
     sidebarLayout(
+      
+      #Price Chart Controls
       sidebarPanel(
         
+        #Category Dropdown
         selectInput("category", label = h5("Category:"), unique.category, selected = unique.category[1], multiple = FALSE),
         
+        #Item Dropdown
         uiOutput("itemSelect"),
 
+        #Date Range Slider
         uiOutput("dateSelect"),
         
+        #Table containing additonal item information
         h5("Item Information:"),
         
+        #Image of the item (if available)
         htmlOutput('ItemImage'),
         
+        #Additional information relevent to the item (if available)
         tableOutput('ItemInfo')
         
       ),
+      
+      #Item Price Chart
       mainPanel(h3("Simple Price Chart"),
         p('Interactive line graph with descriptive stats based on gold, month, and year. Gives a basic overview of a chosen item\'s selling performance on the Grand Exchange over the last few years. Use the date slider to the left to reactively change the data based on a range of dates!'),
         plotlyOutput('graphic'),
@@ -81,12 +99,18 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     )
     
     ),
-    tabPanel("Predictive Price Chart",
+    
+    #GDP Chart Tab
+    tabPanel("Runescape Gross Domestic Product",
     sidebarLayout(
+      
+      #GDP Sidebar/Controls
       sidebarPanel(
         
       ),
-      mainPanel(h3("Predictive Price Chart"),
+      
+      #GDO Chart
+      mainPanel(h3("GDP Price Chart"),
         p('Interactive plot that allows you to see real-time information about items and their stats pulled from RuneScape\'s API.'),
         #plotlyOutput('graphic'),
         br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
