@@ -43,7 +43,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-runescape.data <- initData()
+#runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
@@ -122,19 +122,20 @@ shinyServer(function(input, output) {
     # (the Runescape API says this is the best practice)
     item.id <- head(item.codes %>% filter(name == input$item), 1)
     url <- paste0(base, item.id$id)
-    item.data <- fromJSON(url)
+    item.data <- try(fromJSON(url))
     
-    if(!is.null(item.data)){
+    if(item.data[1] != "Error in open.connection(con, \"rb\") : HTTP error 404.\n"){
       table.data <- runescape.data %>% filter(ItemName == input$item)
       Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
-      Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], 
-                table.data$HighAlch[[1]])
+      Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], table.data$HighAlch[[1]])
       
-      #Display Both columns
-      return(data.frame(Info, Data))
     } else {
-      print("Could not get data")
+      Info <- "Details N/A"
+      Data <- "Item no longer in the Grand Exchange"
     }
+    
+    #Display Both columns
+    return(data.frame(Info, Data))
   })
   
 })
