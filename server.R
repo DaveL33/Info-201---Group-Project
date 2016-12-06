@@ -7,7 +7,7 @@ library(purrr)
 
 #Function that sets up runescape data from csv files
 initData <- function() {
-
+  
   #Import Runescape data from split files and turn to tables
   files <- list.files(path = "data/", pattern = "Runescape_Market_Data", full.names = TRUE)
   tables <- lapply(files, read.csv, stringsAsFactors = FALSE)
@@ -112,10 +112,10 @@ shinyServer(function(input, output) {
   output$ItemImage = renderUI({
     # In case there is more than one item with the same item ID, get the first one
     # (the Runescape API says this is the best practice)
-     item.id <- head(item.codes %>% filter(name == input$item), 1)
-     image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
-     tags$img(src = image.url)
-   })
+    item.id <- head(item.codes %>% filter(name == input$item), 1)
+    image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
+    tags$img(src = image.url)
+  })
   
   #Render table under date slider
   output$ItemInfo <- renderTable({
