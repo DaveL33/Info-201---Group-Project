@@ -17,6 +17,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
              ".shiny-output-error:before { visibility: hidden; }"
   ),
   
+  
   navbarPage("The Grand Exchange!",
                 
     tabPanel("Overview",

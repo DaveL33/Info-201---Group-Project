@@ -95,8 +95,10 @@ shinyServer(function(input, output) {
     min.date <- min(input$dateSelect)
     max.date <- max(input$dateSelect)
     
+    #Using DPLYR functions, creates new column for gold values to be plotted.
     plot.data <- runescape.data %>% filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
     
+    #Using Plotly, plots data from above created dataframe
     plot_ly(plot.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines') %>% layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
   })
   
@@ -112,7 +114,7 @@ shinyServer(function(input, output) {
     image.url = paste0("http://services.runescape.com/m=itemdb_rs/1480946739712_obj_big.gif?id=", item.id$id)
     
     # Set the item icon as an image to be displayed in the app UI
-    tags$img(src = image.url)
+    tags$img(src = image.url, alt = 'Image not available')
   })
   
   #Render table under date slider
@@ -121,15 +123,20 @@ shinyServer(function(input, output) {
     # In case there is more than one item with the same item ID, get the first one
     # (the Runescape API says this is the best practice)
     item.id <- head(item.codes %>% filter(name == input$item), 1)
+    
+    #Parsing url for JSON
     url <- paste0(base, item.id$id)
+    
+    #Parsed URL to pull data from Runescape API. Try function to test if URL returns 404 error.
     item.data <- try(fromJSON(url))
     
+    #If/Else statement for whether or not URL returns 404 error.
     if(item.data[1] != "Error in open.connection(con, \"rb\") : HTTP error 404.\n"){
       table.data <- runescape.data %>% filter(ItemName == input$item)
       Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
       Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], table.data$HighAlch[[1]])
-      
     } else {
+      #If URL is 404 error, return message.
       Info <- "Details N/A"
       Data <- "Item no longer in the Grand Exchange"
     }
