@@ -11,6 +11,12 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
                                                         background-image: url('bg.jpg');
                                                         background-position: center;
                                                         background-size: cover",
+  
+  #Hide warnings from showing up on page
+  tags$style(type="text/css", ".shiny-output-error { visibility: hidden; }",
+             ".shiny-output-error:before { visibility: hidden; }"
+  ),
+  
   navbarPage("The Grand Exchange!",
                 
     tabPanel("Overview",
