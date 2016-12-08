@@ -111,9 +111,9 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         ),
         conditionalPanel(
           condition = "input.conditionalPanels == 2",
-          checkboxGroupInput("checkCategory", label = "Categories:",
-                           choices = list('Ammunition/Tools' = 'Ammo', 'Building/Cooking' = 2, 'Costumes' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7),
-                           selected = 1:7)
+          radioButtons("checkCategory", label = "Categories:",
+                           choices = list('All' = 9, 'Ammunition/Tools' = 1, 'Building/Cooking' = 2, 'Food/Drink' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7, 'Costumes' = 8),
+                           selected = 9)
         ),
         conditionalPanel(
           condition = "input.conditionalPanels == 3"
@@ -134,7 +134,10 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
             p("The vast majority of the data lies almost exactly on a line. The High Level spell almost always provides 50% more than the Low Level spell. There are a mere handful of examples where this is not the case, but it holds true for the remaining ~2000 observations.")
           ),
           tabPanel("Per Category Chart", value = 2,
-            plotlyOutput('perCategory')
+            p('An Interactive chart that shows the overall average gold prices based on category, which can be chosen by the radio buttons to the left.'),
+            plotlyOutput('perCategory'),
+            p('Sudden dips or rises in prices across categories can be due to various real world events!'),
+            p('(Notice how similar the charts for All items and Costumes are. This is due to the fact that the Costumes category has within it, the infamous Blue Party Hat, the most expensive item in the entire game!)')
 
           ),
           tabPanel("Highest Price Chart", value = 3
