@@ -107,6 +107,9 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
       #GDP Sidebar/Controls
       sidebarPanel(
         
+        #Radio buttons for plotting charts
+        radioButtons("statRadio", label = h3("Chart Options"),
+                     choices = list("High Alch vs. Low Alch" = 1, "Plot Items by Category" = 2, "Plot Highest Item Per Category" = 3), selected = 1)
       ),
       
       #GDO Chart
