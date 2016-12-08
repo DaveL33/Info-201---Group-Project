@@ -21,10 +21,8 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
                 
     tabPanel("Overview",
 
-      
     # Header
     titlePanel(img(src='RunescapeLogo.png', width = '300px', height = '100px')),
-    
     
     sidebarLayout(
       
@@ -85,7 +83,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         
         #Additional information relevent to the item (if available)
         tableOutput('ItemInfo')
-        
+      
       ),
       
       #Item Price Chart
@@ -115,8 +113,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         conditionalPanel(
           condition = "input.conditionalPanels == 2",
           radioButtons("checkCategory", label = "Categories:",
-                           choices = list('All' = 9, 'Ammunition/Tools' = 1, 'Building/Cooking' = 2, 'Food/Drink' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7, 'Costumes' = 8),
-                           selected = 9)
+                       choices = list('All' = 9, 'Ammunition/Tools' = 1, 'Building/Cooking' = 2,                               'Food/Drink' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7,                             'Costumes' = 8), selected = 9)
         ),
         conditionalPanel(
           condition = "input.conditionalPanels == 3"
@@ -127,10 +124,12 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
       # Tabset panels of a few more charts
       mainPanel(h3("Economic Charts"),
         tabsetPanel(id = "conditionalPanels",
+                    
           #Alchemy Tab
           tabPanel("Alchemy Chart", value = 1,
             plotlyOutput("alchChart")
-            ),
+          ),
+          
           #Per Category Chart
           tabPanel("Per Category Chart", value = 2,
             p('An Interactive chart that shows the overall average gold prices based on category, which can be chosen by the radio buttons to the left.'),
@@ -139,13 +138,12 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
             p('(Notice how similar the charts for All items and Costumes are. This is due to the fact that the Costumes category has within it, the infamous Blue Party Hat, the most expensive item in the entire game!)')
 
           ),
-          tabPanel("Highest Price Chart", value = 3
-            
+          #Highest Price Chart
+          tabPanel("Highest Price Chart", value = 3,
+            plotlyOutput("highPriceChart")    
           )
           
-          
         ),
-        
         
         br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
         br(),br(),br(),br(),br()

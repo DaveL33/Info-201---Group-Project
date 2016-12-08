@@ -204,7 +204,7 @@ shinyServer(function(input, output) {
   output$alchChart <- renderPlotly({
     
     #Creates a new data frame with one high and one low alch for each item
-    y <-  runescape.data[ !duplicated(runescape.data$ItemName), c(3:5)]
+    y <- runescape.data[!duplicated(runescape.data$ItemName), c(3:5)]
     
     #Removes outliers
     alchData <- y[y$LowAlch != 0 & y$HighAlch != 0 & y$LowAlch < 200000 & y$HighAlch < 200000,]
@@ -217,11 +217,16 @@ shinyServer(function(input, output) {
             type = "scatter", 
             mode = "markers", 
             name="")  %>%
-      layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
-             paper_bgcolor= 'rgba(193, 205, 205, 0.8)',
-             xaxis = list(title = "Low Alchemy"),
-             yaxis = list(title = "High Alchemy"),
-             showlegend = FALSE)
+            layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
+            paper_bgcolor= 'rgba(193, 205, 205, 0.8)',
+            xaxis = list(title = "Low Alchemy"),
+            yaxis = list(title = "High Alchemy"),
+            showlegend = FALSE)
+    
+  })
+  
+  #Render high price chart
+  output$highPriceChart <- renderPlotly({
     
   })
   
