@@ -127,6 +127,7 @@ shinyServer(function(input, output) {
   #Render table under date slider
   output$ItemInfo <- renderTable({
     base <- "http://services.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item="
+    
     # In case there is more than one item with the same item ID, get the first one
     # (the Runescape API says this is the best practice)
     item.id <- head(item.codes %>% filter(name == input$item), 1)
@@ -139,10 +140,13 @@ shinyServer(function(input, output) {
     
     #If/Else statement for whether or not URL returns 404 error.
     if(item.data[1] != "Error in open.connection(con, \"rb\") : HTTP error 404.\n"){
+      
+      #make table data from runescape data
       table.data <- runescape.data %>% filter(ItemName == input$item)
       Info <- c('Description', 'Current Price (GP)', '% Change in Last 30 Days', '% Change in Last 90 Days', '% Change in Last 180 Days', 'Members Only', 'Low Alch', 'High Alch')
       Data <- c(item.data[[1]]$description[[1]], item.data[[1]]$current$price, item.data[[1]]$day30$change, item.data[[1]]$day90$change, item.data[[1]]$day180$change, table.data$MembersOnly[[1]], table.data$LowAlch[[1]], table.data$HighAlch[[1]])
     } else {
+      
       #If URL is 404 error, return message.
       Info <- "Details N/A"
       Data <- "Item no longer in the Grand Exchange"
