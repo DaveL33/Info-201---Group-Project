@@ -8,8 +8,7 @@ source('server.R')
 
 shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Gothic';
                                                         font-size: 9pt;
-                                                        background-image: url('bg.jpg');
-                                                        background-position: center;
+                                                        background: url('bg.jpg');
                                                         background-size: cover",
   
   #Hide warnings from showing up on page
@@ -18,7 +17,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
   ),
   
   
-  navbarPage("The Grand Exchange!",
+  navbarPage(tags$b("The Grand Exchange!"),
                 
     tabPanel("Overview",
 
@@ -31,7 +30,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
       
       # Group Members
       sidebarPanel(
-        h3("Group members:"),
+        h5("Group members:"),
         p("Juan Alvarez, Kyle Evans, Jake George, David Lee")
         ),
       
@@ -106,16 +105,40 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
       
       #GDP Sidebar/Controls
       sidebarPanel(
-        
-        #Radio buttons for plotting charts
-        radioButtons("statRadio", label = h3("Chart Options"),
-                     choices = list("High Alch vs. Low Alch" = 1, "Plot Items by Category" = 2, "Plot Highest Item Per Category" = 3), selected = 1)
+        conditionalPanel(
+          condition = "input.conditionalPanels == 1"
+
+        ),
+        conditionalPanel(
+          condition = "input.conditionalPanels == 2",
+          checkboxGroupInput("checkCategory", label = "Categories:",
+                           choices = list('Ammunition/Tools' = 'Ammo', 'Building/Cooking' = 2, 'Costumes' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7),
+                           selected = 1:7)
+        ),
+        conditionalPanel(
+          condition = "input.conditionalPanels == 3"
+          
+        )
       ),
       
       #GDO Chart
-      mainPanel(h3("GDP Price Chart"),
-        p('Interactive plot that allows you to see real-time information about items and their stats pulled from RuneScape\'s API.'),
-        #plotlyOutput('graphic'),
+      mainPanel(h3("Economic Charts"),
+        tabsetPanel(id = "conditionalPanels",
+          tabPanel("Alch Level Chart", value = 1
+            
+          ),
+          tabPanel("Per Category Chart", value = 2,
+            plotlyOutput('perCategory')
+
+          ),
+          tabPanel("Highest Price Chart", value = 3
+            
+          )
+          
+          
+        ),
+        
+        
         br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
         br(),br(),br(),br(),br()
       )

@@ -156,4 +156,22 @@ shinyServer(function(input, output) {
     return(data.frame(Info, Data))
   })
   
+  output$checkCategory <- renderPrint({
+    #input$checkCategory
+  })
+  
+  output$perCategory <- renderPlotly({
+    
+    #test <- data.frame()
+    
+    test <- runescape.data %>% filter(ItemName == input$item) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+    
+    #conditionalPanel(
+      #condition = 
+    #)
+    
+    plot_ly(test, x = ~PriceDate, y = ~Gold, type = "scatter", mode = 'lines', hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% layout(title = "Average Price per Category", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
+
+  })
+  
 })
