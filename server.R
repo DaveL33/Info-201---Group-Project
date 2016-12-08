@@ -44,7 +44,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-#runescape.data <- initData()
+runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
@@ -53,7 +53,7 @@ item.codes <- initItemCodesData()
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
 
 shinyServer(function(input, output) {
-
+  
   #Set category dataframe to be later modified and scoped
   selected.category <- runescape.data
   
@@ -196,8 +196,8 @@ shinyServer(function(input, output) {
     }
     
     plot_ly(categoryFrame, x = ~PriceDate, y = ~Gold, name = 'Ammo', type = "scatter", mode = 'lines', line = list(color = 'rgb(205, 12, 24)'), hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% 
-                layout(title = "Average Price per Category", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
-                
+      layout(title = "Average Price per Category", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
+    
   })
   
   #Render high vs low alch chart

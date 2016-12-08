@@ -99,11 +99,11 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     
     ),
     
-    #
+    # New tab for more charts
     tabPanel("Runescape Economy Statistics",
     sidebarLayout(
       
-      #
+      # Conditional Panel that changes the sidebar based on which tabset panel is selected.
       sidebarPanel(
         conditionalPanel(
           condition = "input.conditionalPanels == 1"
@@ -121,7 +121,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         )
       ),
       
-      #
+      # Tabset panels of a few more charts
       mainPanel(h3("Economic Charts"),
         tabsetPanel(id = "conditionalPanels",
           #Alchemy Tab
@@ -133,6 +133,7 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
             br(),
             p("The vast majority of the data lies almost exactly on a line. The High Level spell almost always provides 50% more than the Low Level spell. There are a mere handful of examples where this is not the case, but it holds true for the remaining ~2000 observations.")
           ),
+          #Per Category Chart
           tabPanel("Per Category Chart", value = 2,
             p('An Interactive chart that shows the overall average gold prices based on category, which can be chosen by the radio buttons to the left.'),
             plotlyOutput('perCategory'),
