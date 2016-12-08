@@ -44,7 +44,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-#runescape.data <- initData()
+runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
@@ -53,7 +53,7 @@ item.codes <- initItemCodesData()
 unique.category <- sort(as.vector(unique(runescape.data$Category)))
 
 shinyServer(function(input, output) {
-  
+
   #Set category dataframe to be later modified and scoped
   selected.category <- runescape.data
   
