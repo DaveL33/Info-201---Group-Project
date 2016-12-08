@@ -100,7 +100,7 @@ shinyServer(function(input, output) {
     plot.data <- runescape.data %>% filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
     
     #Using Plotly, plots data from above created dataframe
-    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, name = "Price (GP)", type = "scatter", mode = 'lines', hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
+    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, type = "scatter", mode = 'lines', hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% layout(title = "Price (GP) vs. Time", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
   })
   
   #Renders the image of the item that the user is searching for information about. Gets
