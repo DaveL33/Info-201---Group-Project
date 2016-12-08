@@ -44,7 +44,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-runescape.data <- initData()
+#runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
@@ -97,10 +97,23 @@ shinyServer(function(input, output) {
     max.date <- max(input$dateSelect)
     
     #Using DPLYR functions, creates new column for gold values to be plotted.
-    plot.data <- runescape.data %>% filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+    plot.data <- runescape.data %>% 
+      filter(ItemName == input$item, PriceDate > min.date & PriceDate < max.date) %>% 
+      group_by(PriceDate) %>% 
+      summarize(Gold = mean(Price))
     
     #Using Plotly, plots data from above created dataframe
-    plot_ly(plot.data, x = ~PriceDate, y = ~Gold, type = "scatter", mode = 'lines', hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% layout(title = "Price (GP) vs. Time", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
+    plot_ly(plot.data,
+            x = ~PriceDate,
+            y = ~Gold,
+            type = "scatter",
+            mode = 'lines',
+            hoverinfo = 'text',
+            text = ~paste(Gold, 'GP')) %>% 
+      layout(title = "Price (GP) vs. Time",
+             plot_bgcolor= 'rgba(193, 205, 205, 0.8)', 
+             paper_bgcolor= 'rgba(193, 205, 205, 0.8)',
+             xaxis = list(title = "Date"))
   })
   
   #Renders the image of the item that the user is searching for information about. Gets
@@ -172,6 +185,31 @@ shinyServer(function(input, output) {
     
     plot_ly(test, x = ~PriceDate, y = ~Gold, type = "scatter", mode = 'lines', hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% layout(title = "Average Price per Category", plot_bgcolor= 'rgba(193, 205, 205, 0.8)', paper_bgcolor= 'rgba(193, 205, 205, 0.8)')
 
+  })
+  
+  #Render high vs low alch chart
+  output$alchChart <- renderPlotly({
+    
+    #Creates a new data frame with one high and one low alch for each item
+    y <-  runescape.data[ !duplicated(runescape.data$ItemName), c(3:5)]
+    
+    #Removes outliers
+    alchData <- y[y$LowAlch != 0 & y$HighAlch != 0 & y$LowAlch < 200000 & y$HighAlch < 200000,]
+    
+    #Using Plotly, plots high vs low alchemy chart
+    plot_ly(alchData, 
+            x = ~LowAlch, 
+            y = ~HighAlch, 
+            text = ~ItemName, 
+            type = "scatter", 
+            mode = "markers", 
+            name="")  %>%
+      layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
+             paper_bgcolor= 'rgba(193, 205, 205, 0.8)',
+             xaxis = list(title = "Low Alchemy"),
+             yaxis = list(title = "High Alchemy"),
+             showlegend = FALSE)
+    
   })
   
 })

@@ -99,11 +99,11 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
     
     ),
     
-    #GDP Chart Tab
+    #
     tabPanel("Runescape Economy Statistics",
     sidebarLayout(
       
-      #GDP Sidebar/Controls
+      #
       sidebarPanel(
         conditionalPanel(
           condition = "input.conditionalPanels == 1"
@@ -121,11 +121,17 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         )
       ),
       
-      #GDO Chart
+      #
       mainPanel(h3("Economic Charts"),
         tabsetPanel(id = "conditionalPanels",
-          tabPanel("Alch Level Chart", value = 1
-            
+          #Alchemy Tab
+          tabPanel("Alchemy Chart", value = 1,
+            br(),
+            p("Alchemy is a magic ability in Runescape. It is used to turn items into gold. As a player levels up their magic skill, they first unlock the Low Level of alchemy, but eventually will unlock a High Level. The High Level alchemy skill gives a higher return on investment; it gives more gold for an item than the Low Level spell."),
+            p("The amount of gold a player gets when they perform an alchemy spell on an item is static. It never changes. This chart shows the amount of gold recieved when performing the High Level spell vs the amount recieved when performing the Low Level one."),
+            plotlyOutput("alchChart"),
+            br(),
+            p("The vast majority of the data lies almost exactly on a line. The High Level spell almost always provides 50% more than the Low Level spell. There are a mere handful of examples where this is not the case, but it holds true for the remaining ~2000 observations.")
           ),
           tabPanel("Per Category Chart", value = 2,
             plotlyOutput('perCategory')
