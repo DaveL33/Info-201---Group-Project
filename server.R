@@ -207,7 +207,7 @@ shinyServer(function(input, output) {
     y <- runescape.data[!duplicated(runescape.data$ItemName), c(3:5)]
     
     #Removes outliers
-    alchData <- y[y$LowAlch != 0 & y$HighAlch != 0 & y$LowAlch < 200000 & y$HighAlch < 200000,]
+    alchData <- y %>% filter(LowAlch < 200000) %>% filter(HighAlch < 200000)
     
     #Using Plotly, plots high vs low alchemy chart
     plot_ly(alchData, 
