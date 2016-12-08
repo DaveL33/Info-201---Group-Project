@@ -106,8 +106,11 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
       # Conditional Panel that changes the sidebar based on which tabset panel is selected.
       sidebarPanel(
         conditionalPanel(
-          condition = "input.conditionalPanels == 1"
-
+          condition = "input.conditionalPanels == 1",
+          p("Alchemy is a magic ability in Runescape. It is used to turn items into gold. As a player levels up their magic skill, they first unlock the Low Level of alchemy, but eventually will unlock a High Level. The High Level alchemy skill gives a higher return on investment; it gives more gold for an item than the Low Level spell."),
+          p("The amount of gold a player gets when they perform an alchemy spell on an item is static. It never changes. This chart shows the amount of gold recieved when performing the High Level spell vs the amount recieved when performing the Low Level one."),
+          p("The vast majority of the data lies almost exactly on a line. The High Level spell almost always provides 50% more than the Low Level spell. There are a mere handful of examples where this is not the case, but it holds true for the remaining ~2000 observations.")
+          
         ),
         conditionalPanel(
           condition = "input.conditionalPanels == 2",
@@ -126,13 +129,8 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
         tabsetPanel(id = "conditionalPanels",
           #Alchemy Tab
           tabPanel("Alchemy Chart", value = 1,
-            br(),
-            p("Alchemy is a magic ability in Runescape. It is used to turn items into gold. As a player levels up their magic skill, they first unlock the Low Level of alchemy, but eventually will unlock a High Level. The High Level alchemy skill gives a higher return on investment; it gives more gold for an item than the Low Level spell."),
-            p("The amount of gold a player gets when they perform an alchemy spell on an item is static. It never changes. This chart shows the amount of gold recieved when performing the High Level spell vs the amount recieved when performing the Low Level one."),
-            plotlyOutput("alchChart"),
-            br(),
-            p("The vast majority of the data lies almost exactly on a line. The High Level spell almost always provides 50% more than the Low Level spell. There are a mere handful of examples where this is not the case, but it holds true for the remaining ~2000 observations.")
-          ),
+            plotlyOutput("alchChart")
+            ),
           #Per Category Chart
           tabPanel("Per Category Chart", value = 2,
             p('An Interactive chart that shows the overall average gold prices based on category, which can be chosen by the radio buttons to the left.'),
