@@ -90,7 +90,7 @@ shinyServer(function(input, output) {
     min.date <- min(selected.item$PriceDate, na.rm = TRUE)
     max.date <- max(selected.item$PriceDate, na.rm = TRUE)
     
-    #load slider input with dates
+    #Load slider for input dates
     sliderInput(
       "dateSelect",
       "Choose Date Range:",
@@ -100,7 +100,7 @@ shinyServer(function(input, output) {
     )
   })
   
-  #Render plot
+  #Render plot of item price over time
   output$graphic <- renderPlotly({
     #Dates, min and max, taken from the above input slider.
     min.date <- min(input$dateSelect)
@@ -170,8 +170,10 @@ shinyServer(function(input, output) {
     item.data <- try(fromJSON(url))
     
     #If/Else statement for whether or not URL returns 404 error.
+    # If 404 error, this means the item has been removed from the Grand Exchange
+    # between the time of taking item data and now.
     if (item.data[1] != "Error in open.connection(con, \"rb\") : HTTP error 404.\n") {
-      #make table data from runescape data
+      #make table data from Runescape price history data
       table.data <-
         runescape.data %>% filter(ItemName == input$item)
       Info <-
@@ -185,6 +187,8 @@ shinyServer(function(input, output) {
           'Low Alch',
           'High Alch'
         )
+      # Adds all of the Runescape API data about current Grand Exchange prices
+      # if the item is available in the GE
       Data <-
         c(
           item.data[[1]]$description[[1]],
@@ -197,7 +201,7 @@ shinyServer(function(input, output) {
           table.data$HighAlch[[1]]
         )
     } else {
-      #If URL is 404 error, return message.
+      #If URL is 404 error/item is not in Grand Exchange, return message.
       Info <- "Details N/A"
       Data <- "Item no longer in the Grand Exchange"
     }
@@ -273,8 +277,8 @@ shinyServer(function(input, output) {
       combined.category <- c(unique.category)
     }
     
-    
     #Creating new filtered data frame per category
+    #Prices dates assigned are the ones that are the max/min for our data set
     categoryFrame <-
       runescape.data %>% filter(
         Category %in% c(combined.category),

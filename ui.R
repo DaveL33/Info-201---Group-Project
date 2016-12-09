@@ -86,7 +86,7 @@ shinyUI(
       #Standard Price Chart for a single item
       tabPanel(
         "Simple Item Price Chart",
-        
+
         sidebarLayout(
           #Price Chart Controls
           sidebarPanel(
@@ -113,9 +113,7 @@ shinyUI(
             
             #Additional information relevent to the item (if available)
             tableOutput('ItemInfo')
-            
           ),
-          
           #Item Price Chart
           mainPanel(
             h3("Simple Price Chart"),
@@ -132,9 +130,7 @@ shinyUI(
             br(), br(), br(), br(), br(), br(), br(), br()
           )
         )
-        
       ),
-      
       # New tab for more charts
       tabPanel(
         "Runescape Economy Statistics",
@@ -195,7 +191,6 @@ shinyUI(
                   height = '230px')
             )
           ),
-          
           # Tabset panels of a few more charts
           mainPanel(
             h3("Economic Charts"),
@@ -204,9 +199,7 @@ shinyUI(
               
               #Alchemy Tab
               tabPanel("Alchemy Chart", value = 1,
-                       
                        plotlyOutput("alchChart")),
-              
               #Per Category Chart
               tabPanel(
                 "Per Category Chart",
@@ -224,8 +217,6 @@ shinyUI(
                 p(
                   '(Notice how similar the charts for All items and Costumes are. This is due to the fact that the Costumes category has within it, the infamous Blue Party Hat, the most expensive item in the entire game!)'
                 )
-                
-                
               ),
               
               #Highest Price Chart
