@@ -116,8 +116,10 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
                        choices = list('All' = 9, 'Ammunition/Tools' = 1, 'Building/Cooking' = 2,                               'Food/Drink' = 3, 'Herblore' = 4, 'Armour' = 5, 'Weapons' = 6, 'Runes' = 7,                             'Costumes' = 8), selected = 9)
         ),
         conditionalPanel(
-          condition = "input.conditionalPanels == 3"
+          condition = "input.conditionalPanels == 3",
+          p("This tab allows the user to see the statistics of each category."),
           
+          selectInput("statCat", label = h5("Category:"), unique.category, selected = unique.category[1], multiple = FALSE)
         )
       ),
       
@@ -138,9 +140,12 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
             p('(Notice how similar the charts for All items and Costumes are. This is due to the fact that the Costumes category has within it, the infamous Blue Party Hat, the most expensive item in the entire game!)')
 
           ),
+          
           #Highest Price Chart
-          tabPanel("Highest Price Chart", value = 3,
-            plotlyOutput("highPriceChart")    
+          tabPanel("Statistic Per Category", value = 3,
+            
+            #Render table for third panel
+            tableOutput("categoryTable")
           )
           
         ),
@@ -155,7 +160,3 @@ shinyUI(fluidPage(theme = shinytheme('slate'), style = "font-family: 'Century Go
   )
 )
 )
-
-
-    
-    

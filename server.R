@@ -44,7 +44,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-runescape.data <- initData()
+#runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()
@@ -176,23 +176,23 @@ shinyServer(function(input, output) {
     
     #Bunch of if/elses for each radio button. Combines multiple similar categories into one.
     if(input$checkCategory == 1){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Ammo", "Arrows", "Bolts", "Tools and containers", "Pocket items")) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Ammo", "Arrows", "Bolts", "Tools and containers", "Pocket items")) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 2){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Construction materials", "Construction products", "Woodcutting product", "Mining and Smithing", "Familiars", "Fletching materials")) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Construction materials", "Construction products", "Woodcutting product", "Mining and Smithing", "Familiars", "Fletching materials")) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 3){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Farming produce", "Cooking ingredients", "Food and Drink", "Hunting Produce" )) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Farming produce", "Cooking ingredients", "Food and Drink", "Hunting Produce" )) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 4){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Herblore materials", "Seeds", "Jewellery", "Prayer materials", "Potions")) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Herblore materials", "Seeds", "Jewellery", "Prayer materials", "Potions")) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 5){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Mage armour", "Melee armour - high level", "Melee armour - low level", "Melee armour - mid level", "Range armour", "Prayer armour")) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Mage armour", "Melee armour - high level", "Melee armour - low level", "Melee armour - mid level", "Range armour", "Prayer armour")) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 6){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Range weapons", "Mage weapons", "Hunting equipment", "Melee weapons - high level", "Melee weapons - low level", "Melee weapons - mid level" )) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Range weapons", "Mage weapons", "Hunting equipment", "Melee weapons - high level", "Melee weapons - low level", "Melee weapons - mid level" )) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 7){
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Runecrafting", "Runes, Spells and Teleports", "Summoning scrolls", "Crafting materials", "Miscellaneous"  )) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Runecrafting", "Runes, Spells and Teleports", "Summoning scrolls", "Crafting materials", "Miscellaneous"  )) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else if (input$checkCategory == 8) {
-      categoryFrame <- runescape.data %>% filter(Category %in% c("Costumes")) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c("Costumes")) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     } else {
-      categoryFrame <- runescape.data %>% filter(Category %in% c(unique.category)) %>% group_by(PriceDate) %>% summarize(Gold = mean(Price))
+      categoryFrame <- runescape.data %>% filter(Category %in% c(unique.category)) %>% group_by(PriceDate) %>% summarize(Gold = round(mean(Price)))
     }
     
     plot_ly(categoryFrame, x = ~PriceDate, y = ~Gold, name = 'Ammo', type = "scatter", mode = 'lines', line = list(color = 'rgb(205, 12, 24)'), hoverinfo = 'text', text = ~paste(Gold, 'GP')) %>% 
@@ -215,19 +215,24 @@ shinyServer(function(input, output) {
             y = ~HighAlch, 
             text = ~ItemName, 
             type = "scatter", 
-            mode = "markers", 
-            name="")  %>%
-            layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
+            mode = "markers") %>% layout(plot_bgcolor= 'rgba(193, 205, 205, 0.8)',
             paper_bgcolor= 'rgba(193, 205, 205, 0.8)',
             xaxis = list(title = "Low Alchemy"),
             yaxis = list(title = "High Alchemy"),
             showlegend = FALSE)
-    
   })
   
-  #Render high price chart
-  output$highPriceChart <- renderPlotly({
+  #Render the table for the category statistics
+  output$categoryTable <- renderTable({
     
+    #Make data frame filtered per category
+    stats <- runescape.data %>% filter(Category == input$statCat)
+    
+    #Assign info and data for max item
+    Info <- c("Item Name", "Most Expensive Price", "Date Occurrence")
+    Data <- c(stats$ItemName[stats$Price == max(stats$Price, na.rm = TRUE)][1], paste0(unique(stats$Price[stats$Price == max(stats$Price, na.rm = TRUE)]), " GP"), as.Date(stats$PriceDate[stats$Price == max(stats$Price, na.rm = TRUE)][1]))
+    
+    #Return data frame with format data
+    return(data.frame(Info, Data))
   })
-  
 })
