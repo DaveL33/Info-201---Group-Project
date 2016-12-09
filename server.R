@@ -49,7 +49,7 @@ initItemCodesData <- function() {
 }
 
 #Initialize Grand Exchange data from 'data' folder
-#runescape.data <- initData()
+runescape.data <- initData()
 
 #Initialize 3rd party item code data
 item.codes <- initItemCodesData()

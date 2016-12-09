@@ -3,9 +3,8 @@ title:
 account: davel33
 server: shinyapps.io
 appId: 143098
-bundleId: 640169
+bundleId: 641749
 url: https://davel33.shinyapps.io/Info-201---Group-Project/
-when: 1481159741.86274
+when: 1481263292.66118
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: data/Runescape_Market_Data_1.csv
