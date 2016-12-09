@@ -2,6 +2,8 @@
 ##Group Members:
 Juan Alvarez, Kyle Evans, Jake George, David Lee
 
+Link to Shiny App: https://davel33.shinyapps.io/Info-201---Group-Project/
+
 ###Description:
 Runescape is a free to play MMORPG (massively multiplayer online role playing game) that contains its own economy. In the game, players buy and sell virtual items for virtual gold coins through an in-game system called the Grand Exchange. Like a real economy, the price of a given item fluctuates with time and is dependent on a variety of ingame variables. The dataset we will be working with contains approximately three years worth of data that describes the price of all in-game items that are available to players. We got this dataset initially from Reddit, which was under a Github repository [here](https://github.com/Nixonite/Runescape-Grand-Exchange-Market-Data). Since Runescape has a low-level API, the user had to scrape the data from a website that had all of the prices for different items over the past years. This took approximately 20 hours using a scraping applications named BeautifulSoup and Requests. Our target audience would be Runescape users who want to get more information on their items, in order to get an edge while playing the game. The users are able to get a plethora of information from the scraped file. Given this 300MB csv file, the users are now able to ask: “What would the price of a certain item be in the next month?”, “How did the price change relative to the past three years?”, ”What items fluctuates more or less relative to other items?”, and “Are there certain economic trends that can be used to predict the price in the distant future?”
 ###Technical Description
@@ -15,4 +17,3 @@ For this project, we will be learning to work with the Shiny framework for R. Si
 
 
 The goal of this project is to use statistical analysis on the Runescape economy that would help players make in-game choices that would help them earn more gold coins. We anticipate that working with Runescape’s API will be difficult, as in our research we have found reports that their API is not the easiest to work with. We also expect learning to use Shiny will be a challenge, as it is a new framework for everyone involved in the project.
-
