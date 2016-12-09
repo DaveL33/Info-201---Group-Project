@@ -340,7 +340,7 @@ shinyServer(function(input, output) {
     Data <-
       c(stats$ItemName[stats$Price == max(stats$Price, na.rm = TRUE)][1],
         paste0(unique(stats$Price[stats$Price == max(stats$Price, na.rm = TRUE)]), " GP"),
-        as.Date(stats$PriceDate[stats$Price == max(stats$Price, na.rm = TRUE)][1]))
+        as.character(as.Date(stats$PriceDate[stats$Price == max(stats$Price, na.rm = TRUE)][1])))
     
     #Return data frame with format data
     return(data.frame(Info, Data))
